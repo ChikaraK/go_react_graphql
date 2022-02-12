@@ -3,5 +3,6 @@
 
 ## How to run
 ```
+docker compose run --rm node sh -c "cd insta-modoki && yarn install"
 docker compose up
 ```
