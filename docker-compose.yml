@@ -1,0 +1,46 @@
+version: "3"
+services: 
+  go:
+    depends_on:
+      - postgres
+    build: ./docker/go
+    volumes: 
+      - ./go:/usr/local/go/src/insta-modoki
+    ports:
+      - 8888:8081
+    tty:
+      true
+    networks:
+      - go-react-network
+  node:
+    depends_on:
+      - postgres
+    build: ./docker/node
+    volumes:
+      - ./node:/usr/src/app:cached
+    command: sh -c "cd insta-modoki && yarn start"
+    ports:
+      - "3030:3000"
+    networks:
+      - go-react-network
+  postgres:
+    image: postgres:13.3-alpine
+    container_name: gopra-postgres
+    ports:
+      - 5555:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password 
+      - POSTGRES_DB=testdb
+    tty: true
+    restart: always
+    user: root
+    volumes:
+      - "db-store:/var/lib/postgresql/data"
+    networks:
+      - go-react-network
+volumes:
+    db-store:
+networks:
+    go-react-network:
+        driver: bridge
