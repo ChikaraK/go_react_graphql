@@ -11,8 +11,6 @@ export default class AppContent extends Component {
         this.props.handlePostChange(posts);
     }
 
-    state = {posts: []};
-
     clickedItem = (x) => {
         console.log('Clicked',x);
     }
@@ -21,8 +19,7 @@ export default class AppContent extends Component {
         fetch('https://jsonplaceholder.typicode.com/posts')
             .then((response) => response.json())
             .then(json => {
-                this.setState({posts: json});
-                this.handlePostChange(json);
+                  this.handlePostChange(json);
             })
     }
 
@@ -34,11 +31,11 @@ export default class AppContent extends Component {
                 <hr />
                 <button onClick={this.fetchList} className="btn btn-primary">Unko Hassha</button>    
 
-                <p>Posts is {this.state.posts.length} items long</p>
+                <p>Posts is {this.props.posts.length} items long</p>
 
                 <hr />
                 <ul>
-                    {this.state.posts.map((c) => (
+                    {this.props.posts.map((c) => (
                         <li key={c.id}>
                             <a href="#!" onClick={() => this.clickedItem(c.id)}>
                                 {c.title}

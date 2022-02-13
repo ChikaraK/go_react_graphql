@@ -29,7 +29,7 @@ class App extends Component {
     return (
       <div className="app">
         <AppHeader {...myProps} posts={this.state.posts} handlePostChange={this.handlePostChange} />
-        <AppContent handlePostChange={this.handlePostChange}  />
+        <AppContent posts={this.state.posts} handlePostChange={this.handlePostChange}  />
         <AppFooter />
       </div>
     );
