@@ -10,6 +10,16 @@ import './index.css';
 
 class App extends Component {
 
+  constructor(props){
+    super(props);
+    this.handlePostChange = this.handlePostChange.bind(this);
+    this.state = {posts: []};
+  }
+
+  handlePostChange(posts){
+    this.setState({posts: posts});
+  }
+
   render() {
     const myProps = {
       title: "My Sugoi Unko App",
@@ -18,8 +28,8 @@ class App extends Component {
     };
     return (
       <div className="app">
-        <AppHeader {...myProps}/>
-        <AppContent />
+        <AppHeader {...myProps} posts={this.state.posts} handlePostChange={this.handlePostChange} />
+        <AppContent handlePostChange={this.handlePostChange}  />
         <AppFooter />
       </div>
     );

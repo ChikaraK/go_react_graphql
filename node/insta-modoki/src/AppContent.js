@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 
 export default class AppContent extends Component {
 
+    constructor(props){
+        super(props);
+        this.handlePostChange = this.handlePostChange.bind(this);
+    }
+
+    handlePostChange(posts){
+        this.props.handlePostChange(posts);
+    }
+
     state = {posts: []};
 
-    onEnterFunction = () => {
-        console.log('Nottayo!');
-    }
-    onLeaveFunction = () => {
-        console.log('Hanaretayo!');
-    }
     clickedItem = (x) => {
         console.log('Clicked',x);
     }
@@ -19,6 +22,7 @@ export default class AppContent extends Component {
             .then((response) => response.json())
             .then(json => {
                 this.setState({posts: json});
+                this.handlePostChange(json);
             })
     }
 
@@ -28,7 +32,6 @@ export default class AppContent extends Component {
                 This is the Unko content.
                 <br />
                 <hr />
-                <p onMouseEnter={this.onEnterFunction} onMouseLeave={this.onLeaveFunction}>This is another unko text</p>
                 <button onClick={this.fetchList} className="btn btn-primary">Unko Hassha</button>    
 
                 <p>Posts is {this.state.posts.length} items long</p>
