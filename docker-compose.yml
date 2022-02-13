@@ -17,12 +17,15 @@ services:
       - postgres
     build: ./docker/node
     volumes:
-      - ./node:/usr/src/app:delegated
-    command: sh -c "cd insta-modoki && npm start"
-    environment:
-      - CHOKIDAR_USEPOLLING=true
+      - ./node:/usr/src/app
+      - node_module_volumes:/usr/src/app/insta-modoki/node_modules
+    # command: sh -c "cd insta-modoki && yarn start"
+    tty:
+      true
     ports:
       - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     networks:
       - go-react-network
   postgres:
@@ -43,6 +46,7 @@ services:
       - go-react-network
 volumes:
     db-store:
+    node_module_volumes:
 networks:
     go-react-network:
         driver: bridge
