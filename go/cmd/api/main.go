@@ -1,11 +1,17 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
+	"database/sql"
 	"flag"
 	"fmt"
+	"insta-modoki/models"
 	"log"
 	"net/http"
+	"os"
+	"time"
+
+	_ "github.com/lib/pq"
 )
 
 const version = "1.0.0"
@@ -13,6 +19,9 @@ const version = "1.0.0"
 type config struct {
 	port int
 	env  string
+	db   struct {
+		dsn string
+	}
 }
 
 type AppStatus struct {
@@ -21,34 +30,62 @@ type AppStatus struct {
 	Version     string `json:"version"`
 }
 
+type application struct {
+	config config
+	logger *log.Logger
+	models models.Models
+}
+
 func main() {
 	var cfg config
 
 	flag.IntVar(&cfg.port, "port", 8081, "Server port to listen on")
 	flag.StringVar(&cfg.env, "env", "development", "Application environment (devlopment|production)")
+	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://root:password@postgres:5432/testdb?sslmode=disable", "Postgres connection string")
 	flag.Parse()
 
-	fmt.Println("Running")
+	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	db, err := openDB(cfg)
+	if err != nil {
+		logger.Fatal(err)
+	}
+	defer db.Close()
 
-	http.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
-		currentStatus := AppStatus{
-			Status:      "Available",
-			Environment: cfg.env,
-			Version:     version,
-		}
+	app := &application{
+		config: cfg,
+		logger: logger,
+		models: models.NewModels(db),
+	}
 
-		js, err := json.MarshalIndent(currentStatus, "", "\t")
-		if err != nil {
-			log.Println(err)
-		}
+	srv := &http.Server{
+		Addr:         fmt.Sprintf(":%d", cfg.port),
+		Handler:      app.routes(),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
 
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(js)
-	})
+	logger.Println("Starting server on port", cfg.port)
 
-	err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.port), nil)
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func openDB(cfg config) (*sql.DB, error) {
+	db, err := sql.Open("postgres", cfg.db.dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err = db.PingContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
