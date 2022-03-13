@@ -7,7 +7,7 @@ const Select = (props) => {
                 {props.title}{" "}
             </label>
             <select
-                className="form-select"
+                className={`form-control ${props.className}`}
                 name={props.name}
                 value={props.value}
                 onChange={props.handleChange}
@@ -26,6 +26,7 @@ const Select = (props) => {
                     )
                 })}
             </select>
+            <div className={props.errorDiv}>{props.errorMsg}</div>
         </div>
     )
 }
