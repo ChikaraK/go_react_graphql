@@ -18,10 +18,9 @@ export default class Admin extends Component {
             return;
         }
         
-        fetch("http://localhost:8888/v1/movies")
+        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/movies`)
             .then((response) => {
                 if(response.status !== "200") {
-                    console.log("Status code is", response.status);
                     let err = Error;
                     err.message = "Invalid response code:" + response.status;
                     this.setState({error: err});

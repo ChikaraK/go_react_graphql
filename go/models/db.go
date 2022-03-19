@@ -17,7 +17,7 @@ func (m *DBModel) Get(id int) (*Movie, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `SELECT id, title, description, year, release_date, run_time, rating, mpaa_rating, created_at, updated_at
+	query := `SELECT id, title, description, year, release_date, runtime, rating, mpaa_rating, created_at, updated_at, coalesce(poster, '')
 	FROM movies WHERE id = $1`
 
 	row := m.DB.QueryRowContext(ctx, query, id)
@@ -35,6 +35,7 @@ func (m *DBModel) Get(id int) (*Movie, error) {
 		&movie.MPAARating,
 		&movie.CreatedAt,
 		&movie.UpdatedAt,
+		&movie.Poster,
 	)
 	if err != nil {
 		return nil, err
@@ -85,7 +86,7 @@ func (m *DBModel) All(genre ...int) ([]*Movie, error) {
 		where = fmt.Sprintf("where id in (select movie_id from movies_genres where genre_id = %d)", genre[0])
 	}
 
-	query := fmt.Sprintf(`SELECT id, title, description, year, release_date, run_time, rating, mpaa_rating, created_at, updated_at
+	query := fmt.Sprintf(`SELECT id, title, description, year, release_date, runtime, rating, mpaa_rating, created_at, updated_at, coalesce(poster, '')
 	FROM movies %s ORDER BY title`, where)
 
 	rows, err := m.DB.QueryContext(ctx, query)
@@ -109,6 +110,7 @@ func (m *DBModel) All(genre ...int) ([]*Movie, error) {
 			&movie.MPAARating,
 			&movie.CreatedAt,
 			&movie.UpdatedAt,
+			&movie.Poster,
 		)
 		if err != nil {
 			return nil, err
@@ -187,8 +189,8 @@ func (m *DBModel) InsertMovie(movie Movie) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	stmt := `INSERT INTO movies (title, description, release_date, year, run_time, rating, mpaa_rating, created_at, updated_at) 
-	values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+	stmt := `INSERT INTO movies (title, description, release_date, year, runtime, rating, mpaa_rating, created_at, updated_at, poster) 
+	values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
 	_, err := m.DB.ExecContext(ctx, stmt,
 		movie.Title,
@@ -200,6 +202,7 @@ func (m *DBModel) InsertMovie(movie Movie) error {
 		movie.MPAARating,
 		movie.CreatedAt,
 		movie.UpdatedAt,
+		movie.Poster,
 	)
 	if err != nil {
 		log.Println(err)
@@ -215,7 +218,7 @@ func (m *DBModel) UpdateMovie(movie Movie) error {
 
 	stmt := `UPDATE movies SET 
 			title = $1, description = $2, release_date = $3, year = $4, 
-			run_time = $5, rating = $6, mpaa_rating = $7, updated_at = $8 where id = $9`
+			runtime = $5, rating = $6, mpaa_rating = $7, updated_at = $8, poster = $9 where id = $10`
 
 	_, err := m.DB.ExecContext(ctx, stmt,
 		movie.Title,
@@ -226,6 +229,7 @@ func (m *DBModel) UpdateMovie(movie Movie) error {
 		movie.Rating,
 		movie.MPAARating,
 		movie.UpdatedAt,
+		movie.Poster,
 		movie.ID,
 	)
 	if err != nil {

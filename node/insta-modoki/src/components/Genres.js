@@ -9,10 +9,9 @@ export default class Genres extends Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8888/v1/genres/")
+        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/genres/`)
             // .then((response) => response.json())
             .then((response) => {
-                console.log("Status code is", response.status);
                 if (response.status !== "200") {
                     let err = Error;
                     err.message = "Invalid response code:" + response.status;

@@ -83,7 +83,7 @@ export default class EditMovie extends Component {
             headers: myHeaders,
         }
 
-        fetch('http://localhost:8888/v1/admin/editmovie', requestOptions)
+        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/admin/editmovie`, requestOptions)
             .then(response => response.json())
             .then(data => {
                 if(data.error) {
@@ -125,7 +125,7 @@ export default class EditMovie extends Component {
         }
         const id = this.props.match.params.id;
         if (id > 0) {
-            fetch("http://localhost:8888/v1/movie/" + id)
+            fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/movie/` + id)
                 .then((response) => {
                     if(response.status !== '200'){
                         let err = Error;
@@ -179,7 +179,7 @@ export default class EditMovie extends Component {
                         headers: myHeaders,
                     }
                     fetch(
-                        "http://localhost:8888/v1/admin/deletemovie/" + this.state.movie.id, 
+                        `${process.env.REACT_APP_DEV_BACKEND}/v1/admin/deletemovie/` + this.state.movie.id, 
                         requestOptions
                     )
                     .then(response => response.json())

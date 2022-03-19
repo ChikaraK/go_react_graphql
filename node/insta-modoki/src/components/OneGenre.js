@@ -10,9 +10,8 @@ export default class OneGenre extends Component {
     }
 
     componentDidMount(){
-        fetch("http://localhost:8888/v1/movies/" + this.props.match.params.id)
+        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/movies/` + this.props.match.params.id)
             .then((response) => {
-                console.log("Status code is", response.status);
                 if (response.status !== "200") {
                     let err = Error;
                     err.message = "Invalid response code:" + response.status;

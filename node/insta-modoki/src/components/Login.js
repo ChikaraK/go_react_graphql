@@ -53,7 +53,7 @@ export default class Login extends Component {
             body: JSON.stringify(payload),
         }
 
-        fetch("http://localhost:8888/v1/signin", requestOptions)
+        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/signin`, requestOptions)
             .then((response) => response.json())
             .then((data) => {
                 if(data.error) {
