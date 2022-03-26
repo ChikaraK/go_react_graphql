@@ -9,7 +9,7 @@ export default class Genres extends Component {
     }
 
     componentDidMount() {
-        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/genres/`)
+        fetch(`${process.env.REACT_APP_DEV_API_URL}/v1/genres/`)
             // .then((response) => response.json())
             .then((response) => {
                 if (response.status !== "200") {

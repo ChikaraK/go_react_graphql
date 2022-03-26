@@ -34,7 +34,7 @@ export default class OneMovieGraphQL extends Component{
             headers: myHeaders
         }
 
-        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/graphq`, requestOptions)
+        fetch(`${process.env.REACT_APP_DEV_API_URL}/v1/graphq`, requestOptions)
             .then((response) => response.json())
             .then((data) => {
                 this.setState({

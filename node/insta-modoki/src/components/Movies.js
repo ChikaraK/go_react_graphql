@@ -9,7 +9,7 @@ export default class Movies extends Component {
     }
 
     componentDidMount(){
-        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/movies`)
+        fetch(`${process.env.REACT_APP_DEV_API_URL}/v1/movies`)
             .then((response) => {
                 if (response.status !== "200") {
                     let err = Error;

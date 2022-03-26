@@ -10,7 +10,7 @@ export default class OneGenre extends Component {
     }
 
     componentDidMount(){
-        fetch(`${process.env.REACT_APP_DEV_BACKEND}/v1/movies/` + this.props.match.params.id)
+        fetch(`${process.env.REACT_APP_DEV_API_URL}/v1/movies/` + this.props.match.params.id)
             .then((response) => {
                 if (response.status !== "200") {
                     let err = Error;

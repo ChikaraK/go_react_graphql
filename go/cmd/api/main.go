@@ -48,6 +48,9 @@ func main() {
 	flag.StringVar(&cfg.jwt.secret, "jwt-secret", "2dce505d96a53c5768052ee90f3df2055657518dad489160df9913f66042e160", "secret")
 	flag.Parse()
 
+	// read jwt secret from env
+	// cfg.jwt.secret = os.Getenv("GO_MOVIES_JWT")
+
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
 	db, err := openDB(cfg)
 	if err != nil {

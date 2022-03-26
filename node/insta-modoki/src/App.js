@@ -1,11 +1,12 @@
 import React, {Component, Fragment} from 'react';
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 import Home from './components/Home';
-import Movies from './components/Movies';
-import Genres from './components/Genres';
+// import Movies from './components/Movies';
+import MoviesFunc from './components/MoviesFunc';
+import GenresFunc from './components/GenresFunc';
 import Admin from './components/Admin';
-import OneMovie from './components/OneMovie';
-import OneGenre from './components/OneGenre';
+import OneMovieFunc from './components/OneMovieFunc';
+import OneGenreFunc from './components/OneGenreFunc';
 import EditMovie from './components/EditMovie';
 import Login from './components/Login';
 import GraphQL from './components/GraphQL';
@@ -102,14 +103,14 @@ export default class App extends Component {
           <div className="col-md-10">
             <Switch>
     
-                <Route path="/movie/:id" component={OneMovie}/>
+                <Route path="/movie/:id" component={OneMovieFunc}/>
                 <Route path="/moviegraphql/:id" component={OneMovieGraphQL}/>
     
                 <Route path="/movies">
-                  <Movies />
+                  <MoviesFunc />
                 </Route>
     
-                <Route path="/genre/:id" component={OneGenre}/>
+                <Route path="/genre/:id" component={OneGenreFunc}/>
                 <Route
                   path="/login"
                   component={(props) => (
@@ -118,7 +119,7 @@ export default class App extends Component {
                 />
 
                 <Route exact path="/genres">
-                  <Genres />
+                  <GenresFunc />
                 </Route>
     
                 <Route exact path="/graphql">
