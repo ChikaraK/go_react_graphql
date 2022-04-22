@@ -6,3 +6,9 @@ go/react理解用
 docker compose run --rm node sh -c "cd insta-modoki && yarn install"
 docker compose up
 ```
+
+## 使ってるもの
+Go
+React
+GraphQL(rest apiもある)
+Postgres
